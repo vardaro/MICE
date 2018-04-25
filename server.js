@@ -22,13 +22,14 @@ Emporium.findById('5adfc4dde2714b3c60620bc0', (err, data) => {
 });
 
 // returns the state, but also adjusts the db
-const getState = () => {
+const getState = (cb) => {
     let state = MICE.getState();
     
     Emporium.findByIdAndUpdate(STATE_ID, state, (err, data) => {
         if (err) console.log(err);
+        cb(state);
     });
-    return state;
+
 };
 
 // set up the express server
@@ -40,10 +41,10 @@ app.use(express.static('client'));
  * No params
  */
 app.get('/api/get_state', (req, res) => {
-    let newState = getState();
+    getState(state => {
+        res.send(state);
+    });
 
-    res.send(newState);
-    
 });
 
 /**
@@ -53,26 +54,34 @@ app.get('/api/get_state', (req, res) => {
 app.post('/api/create_container', (req, res) => {
     let body = req.body;
     MICE.createContainer(body);
-    res.send(getState());
+    getState(state => {
+        res.send(state);
+    });
 });
 
 app.post('/api/create_scoop', (req, res) => {
     let body = req.body;
     MICE.createScoop(body);
-    res.send(getState());
+    getState(state => {
+        res.send(state);
+    });
 });
 
 app.post('/api/create_topping', (req, res) => {
     let body = req.body;
     MICE.createTopping(body);
-    res.send(getState());
+    getState(state => {
+        res.send(state);
+    });
 });
 
 app.post('/api/create_order', (req, res) => {
 
     let body = req.body;
     MICE.createOrder(body);
-    res.send(getState());
+    getState(state => {
+        res.send(state);
+    });
 });
 
 // send an object with an id and status field example:
@@ -86,7 +95,9 @@ app.post('/api/change_order_status/:id', (req, res) => {
     let body = req.body;
     MICE.changeOrderStatus(body);
 
-    res.send(getState());
+    getState(state => {
+        res.send(state);
+    });
 });
 
 /**
@@ -96,7 +107,9 @@ app.post('/api/change_order_status/:id', (req, res) => {
 app.post('/api/create_server', (req, res) => {
     let body = req.body;
     MICE.createServer(body);
-    res.send(getState());
+    getState(state => {
+        res.send(state);
+    });
 });
 
 /**
@@ -106,7 +119,9 @@ app.post('/api/create_server', (req, res) => {
 app.post('/api/create_customer', (req, res) => {
     let body = req.body;
     MICE.createCustomer(body);
-    res.send(getState());
+    getState(state => {
+        res.send(state);
+    });
 });
 
 app.get('/', (req, res) => {
