@@ -1,0 +1,20 @@
+{
+  "name": "mice",
+  "version": "1.0.0",
+  "description": "for cse1325",
+  "main": "test.js",
+  "scripts": {
+    "start": "node server.js",
+    "install": "cd MICE && node-gyp configure build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "mongoose": "^5.0.16",
+    "node-gyp": "^3.6.2"
+  }
+}
