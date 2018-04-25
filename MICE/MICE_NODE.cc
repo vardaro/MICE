@@ -106,12 +106,12 @@ void getState(const v8::FunctionCallbackInfo<v8::Value> &args)
     Isolate *isolate = args.GetIsolate();
     Local<Object> newState = Object::New(isolate);
 
-    // newState->Set(String::NewFromUtf8(isolate, "containers"), vectorToArray<container>(isolate, std::bind(&packContainer, _1, _2, _3), std::bind(&emporium::getContainers, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "scoops"), vectorToArray<scoop>(isolate, std::bind(&packScoop, _1, _2, _3), std::bind(&emporium::getScoops, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "toppings"), vectorToArray<topping>(isolate, std::bind(&packTopping, _1, _2, _3), std::bind(&emporium::getToppings, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "orders"), vectorToArray<order>(isolate, std::bind(&packOrder, _1, _2, _3), std::bind(&emporium::getOrders, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "servers"), vectorToArray<server>(isolate, std::bind(&packServer, _1, _2, _3), std::bind(&emporium::getServers, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "customers"), vectorToArray<customer>(isolate, std::bind(&packCustomer, _1, _2, _3), std::bind(&emporium::getCustomers, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "containers"), vectorToArray<container>(isolate, std::bind(&packContainer, _1, _2, _3), std::bind(&emporium::getContainers, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "scoops"), vectorToArray<scoop>(isolate, std::bind(&packScoop, _1, _2, _3), std::bind(&emporium::getScoops, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "toppings"), vectorToArray<topping>(isolate, std::bind(&packTopping, _1, _2, _3), std::bind(&emporium::getToppings, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "orders"), vectorToArray<order>(isolate, std::bind(&packOrder, _1, _2, _3), std::bind(&emporium::getOrders, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "servers"), vectorToArray<server>(isolate, std::bind(&packServer, _1, _2, _3), std::bind(&emporium::getServers, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "customers"), vectorToArray<customer>(isolate, std::bind(&packCustomer, _1, _2, _3), std::bind(&emporium::getCustomers, &STATE)));
 
     args.GetReturnValue().Set(newState);
 }

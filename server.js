@@ -18,6 +18,7 @@ let Emporium = mongoose.model('Emporium', emporiumSchema);
 // load the data from the db first
 Emporium.findById('5adfc4dde2714b3c60620bc0', (err, data) => {
     MICE.loadState(data._doc);
+    console.log(MICE.getState());
 });
 
 // returns the state, but also adjusts the db
