@@ -1,5 +1,7 @@
 #include <node.h>
 #include <node_object_wrap.h>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 #include <v8.h>
 #include <iostream>
@@ -17,6 +19,11 @@
 // this file exports CPP functions to the node server
 using namespace v8;
 using namespace std::placeholders;
+// STATE MACHINE
+// The current status of the emporium is stored in emporium STATE. every mutation on the client
+// is sent to STATE where is applies the necessary mutation. once the state has been mutated, it gets recorded
+// to the database, and a new copy of the STATE is sent to the client to be stored as a cookie...
+
 emporium STATE;
 
 // accepts the json of a container, creates a new container and apends to state
@@ -48,7 +55,12 @@ void createOrder(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
     Isolate *isolate = args.GetIsolate();
     order o = unpackOrder(isolate, args);
-    o.setOrderNumber(STATE.getOrders().size()); // set the order number to the index lol
+
+    // get a random number for order num
+    srand (time(NULL));
+    int rando = rand() % 10000 + 1; // random number between 0 and 10000
+
+    o.setOrderNumber(rando);
 
     // STATE.getOrders().emplace_back(o);
     STATE.makeOrder(o);
@@ -65,7 +77,6 @@ void createServer(const v8::FunctionCallbackInfo<v8::Value> &args)
 //  accepts an object container id and status, changes the status of the order at the id to the new status..
 void fillOrder(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
-    Isolate *isolate = args.GetIsolate();
     int orderNumber = Handle<Value>::Cast(args[0])->NumberValue();
 
     STATE.getOrders()[orderNumber].setStatus("filled");

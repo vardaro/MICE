@@ -6,7 +6,7 @@ $(document).ready(() => {
     $('#order-dashboard').html(() => {
         let length = STATE.orders.length;
 
-        let outputHTML = ``;
+        let outputHTML = `<h3 style="margin-bottom: 2rem;">Unfilled Orders</h3>`;
         for (let i = 0; i < length; i++) {
             let curOrder = STATE.orders[i];
 
@@ -17,8 +17,7 @@ $(document).ready(() => {
                 `
                 <div class="row" style="margin-bottom: 4rem;">
 
-                    <div class="col-lg-6">
-                    <div class="card">
+                    <div class="card" style="width: 90%">
                     
                         <div class="card-body">
                             <h4 class="card-title"><a>Order ${curOrder.orderNumber + 1} (${curOrder.status})</a></h4>
@@ -49,15 +48,112 @@ $(document).ready(() => {
                             
                             </div>
                         </div>
-                    </div>
                 </div>
                 `;
             
 
             }
         }
+        outputHTML += `<h3 style="margin-bottom: 2rem;">Filled/Cancelled Orders</h3>`;
+        for (let i = 0; i < length; i++) {
+            let curOrder = STATE.orders[i];
+            if (curOrder.status == "unfilled") continue;
+            outputHTML += `<div class="row" style="margin-bottom: 4rem;">
+            
+                                <div class="card" style="width: 90%">
+                                
+                                    <div class="card-body">
+                                        <h4 class="card-title"><a>Order ${curOrder.orderNumber + 1} (${curOrder.status})</a></h4>
+                                        ${(()=>{
+                                            let out = ``
+                                            curOrder.servings.map((cur, index) => {
+                                                out += 
+                                                `
+                                                    <p class="card-text">
+                                                        <strong>Serving: </strong> ${index + 1}
+                                                        <br>
+                                                        <strong>Price: </strong> ${cur.price} 
+                                                        <br>
+                                                        <strong>Container: </strong> ${cur.container.name}
+                                                        <br>
+                                                        <strong>Scoops: </strong> ${cur.scoops.map(cur => {return cur.name}).join(', ')}
+                                                        <br>
+                                                        <strong>Toppings: </strong> ${cur.toppings.map(cur => {return cur.name}).join(', ')}
+                                                        
+                                                    </p>
+                                                    
+                                                `;
+                                            });
+                                            return  out;
+                                        })()}
+                                        </div>
+                                </div>
+                            </div>`;
+        }
         return outputHTML;
     });
+
+
+    $('#inventory-dashboard').html(() => {
+        // build a table to container, topping, and scoop
+        let outputHTML = ``;
+
+        //container
+        outputHTML += `<h3 style="margin-bottom: 2rem;">Containers</h3>` + getObjectTableHTML(STATE.containers);
+        //scoops
+        outputHTML += `<h3 style="margin-bottom: 2rem;">Scoops</h3>` + getObjectTableHTML(STATE.scoops);
+        //toppings
+        outputHTML += `<h3 style="margin-bottom: 2rem;">Toppings</h3>` + getObjectTableHTML(STATE.toppings);
+        
+        return outputHTML;
+    });
+
+    function getObjectTableHTML(arrayOfObject) {
+        let outputHTML = ``;
+
+            outputHTML += 
+            `
+            <table class="table" style="margin-bottom: 4rem;">
+            
+                <!--Table head-->
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Stock</th>
+                        <th>RP</th>
+                        <th>WP</th>
+                        
+                    </tr>
+                </thead>
+              <!--Table head-->
+            
+                <!--Table body-->
+                <tbody>
+                    ${(() => {
+                        let out = ``;
+                        arrayOfObject.map((cur, index) => {
+                            out += 
+                            `
+                            <tr>
+                            <th scope="row">${index}</th>
+                            <td>${cur.name}</td>
+                            <td>${cur.stockRemaining}</td>
+                            <td>$${cur.retailCost}</td>
+                            <td>$${cur.wholesaleCost}</td>
+                            </tr>
+                            `;
+                        }); 
+                        return out;                     
+                    })()}
+                </tbody>
+                <!--Table body-->
+            
+            </table>
+            `
+
+        return outputHTML;
+    }
 
     function getServingHTML(serving) {
         let outputHTML = `
