@@ -91,9 +91,10 @@ app.post('/api/create_order', (req, res) => {
     status: "filled"
 }
 */
-app.post('/api/change_order_status/:id', (req, res) => {
-    let body = req.body;
-    MICE.changeOrderStatus(body);
+app.post('/api/fill_order/:id', (req, res) => {
+    let id = parseInt(req.params.id);
+
+    MICE.fillOrder(id);
 
     getState(state => {
         res.send(state);

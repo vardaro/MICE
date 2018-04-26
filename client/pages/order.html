@@ -17,69 +17,40 @@
     <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" rel="stylesheet" type="text/css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/css/mdb.min.css" rel="stylesheet">
 
-    <link href="../styles.css" rel="stylesheet" type="text/css">
-
-    <style>
-
-        .top {
-            top: 0px;
-            z-index: 100;
-            position: sticky;
-            background-color: #E0E0E0;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="top">
-        <div class="container">
-            <p>Total: $
-                <span style="color: green" id="price">0.0</span>
-            </p>
-            <p>Servings:
-                <span id="servings">0</span>
-            </p>
-        </div>
-    </div>
+    <header>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark pink scrolling-navbar">
+            <a class="navbar-brand" href="#">
+                <strong>Order</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
+        </nav>
+    </header>
     <div class="container">
-        <section class="header">
-            <h2>Order Ice Cream</h2>
-        </section>
-
-    </div>
-
-    <!-- <div class="container">
-        <div class="row">
-            <h4>Select a Container</h4>
-            <div class="container-selector"></div>
+        <div class="row" style="margin-top: 5rem;">
+            <div class="col-md-3">
+                <label for="serving-count" id="serving-input-label">Number of servings</label>
+                <input type="number" class="form-control" id="serving-count">
+            </div>
         </div>
 
-        <div class="row">
-            <h4>Ice Cream Scoops</h4>
-            <div class="scoop-selector"></div>
-        </div>
-
-        <div class="row">
-            <h4>Scoop Toppings</h4>
-            <div class="topping-selector"></div>
-        </div>
-
-        <input class="button-primary order" type="submit" value="Continue">
-
-    </div> -->
-
-    <div class="container">
-        <label id="serving-input-label">Number of servings</label>
-        <input type="number" id="serving-count">
 
         <div id="accordion">
         </div>
 
-        <input type="button" class="button-primary order" value="Place Order">
     </div>
 </body>
 <!-- jquery -->

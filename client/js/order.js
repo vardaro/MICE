@@ -13,22 +13,29 @@ $(document).ready(() => {
             let cur = STATE.containers[i];
 
             let curInnerHTML = `
-            <div class="row">
-                <div class="six columns">
-                        <p class="container-name" style="margin-bottom: 0; font-weight: bold;">${cur.name} -
-                            <span style="color: green">$${cur.retailCost}</span>
+
+            <div class="row" style="margin-bottom: 2rem;">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">${cur.name} - <span style="color: green">$${cur.retailCost}</span></h4>
+                        <p class="card-text">
+                            <strong>Scoops: </strong> ${cur.scoopCount}
+                            <br>
+                            ${cur.description}
+                        
                         </p>
-                        <p style="margin-bottom: 0">Max: ${cur.scoopCount} scoops</p>
-                        <p>${cur.description}</p>
+                        <button class="container-button btn btn-primary" id="${servingIndex}" name="${i}">Select</button>               
+                    </div>
                 </div>
-                <div class="six columns">
-                    <button class="container-button" id="${servingIndex}" name="${i}">Select</button>                
-                </div>
-            </div>`;
+            </div>
+            </div>
+            
+            `;
 
             targetHTML += curInnerHTML;
         }
-        return '<p style="font-weight: bold; border-bottom: 1px solid #000">Container</p>' + targetHTML;
+        return '<h1 class="h1" style="margin-top: 2rem;">Container</h1>' + targetHTML;
 
     }
 
@@ -40,21 +47,24 @@ $(document).ready(() => {
             let cur = STATE.toppings[i];
 
             let curInnerHTML = `
-            <div class="row">
-                <div class="six columns">
-                        <p class="container-name" style="margin-bottom: 0; font-weight: bold;">${cur.name} -
-                            <span style="color: green">$${cur.retailCost}</span>
-                        </p>
-                        <p>${cur.description}</p>
-                </div>
-                <div class="six columns">
-                    <input class="topping-input" style="width: 70px" name="${i}" id="${servingIndex}" type="number">            
+            <div class="row" style="margin-bottom: 2rem;">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">${cur.name} - <span style="color: green">$${cur.retailCost}</span></h4>
+                            <p class="card-text">
+                                ${cur.description}
+                            </p>
+                            <label for="${servingIndex}">Number of toppings</label>
+                            <input class="topping-input form-control" style="width: 70px" name="${i}" id="${servingIndex}" type="number">            
+                        </div>
+                    </div>
                 </div>
             </div>`;
 
             targetHTML += curInnerHTML;
         }
-        return '<p style="font-weight: bold; border-bottom: 1px solid #000">Topping</p>' + targetHTML;
+        return '<h1 class="h1" style="margin-top: 2rem;">Toppings</h1>' + targetHTML;
 
     }
 
@@ -66,21 +76,25 @@ $(document).ready(() => {
             let cur = STATE.scoops[i];
 
             let curInnerHTML = `
-            <div class="row">
-                <div class="six columns">
-                        <p class="container-name" style="margin-bottom: 0; font-weight: bold;">${cur.name} -
-                            <span style="color: green">$${cur.retailCost}</span>
-                        </p>
-                        <p>${cur.description}</p>
+            <div class="row" style="margin-bottom: 2rem;">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">${cur.name} - <span style="color: green">$${cur.retailCost}</span></h4>
+                            <p class="card-text">
+                                ${cur.description}
+                            </p>
+                            <label for="${servingIndex}">Number of scoops</label>
+                            <input class="scoop-input form-control" style="width: 70px" name="${i}" id="${servingIndex}" type="number">  
+                        </div>
+                    </div>
                 </div>
-                <div class="six columns">
-                    <input class="scoop-input" style="width: 70px" name="${i}" id="${servingIndex}" type="number">            
-                </div>
-            </div>`;
+            </div>
+            `;
 
             targetHTML += curInnerHTML;
         }
-        return '<p  style="font-weight: bold; border-bottom: 1px solid #000">Scoop</p>' + targetHTML;
+        return '<h1 class="h1" style="margin-top: 2rem;">Scoops</h1>' + targetHTML;
 
     }
 
@@ -117,13 +131,13 @@ $(document).ready(() => {
         for (let i = 0; i < numServings; i++) {
             // pass the index as the id so it can easily be recognized which serving it corresponds to
             target += `
-            <h3>Serving ${i + 1}</h3>
+            <h3 class="h3" style="margin-top: 5rem;">Serving ${i + 1}</h3>
             <div>${getServingForm(i)}</div>
             `;
             ORDER.servings[i] = {};
         }
-        $('#accordion').html(target);
-        $('#accordion').accordion();
+        $('#accordion').html(target + '<input type="button" class="btn btn-success order" value="Place Order">');
+        // $('#accordion').accordion();
     }
 
     $('#serving-count').change(e => {
@@ -140,7 +154,7 @@ $(document).ready(() => {
     // A function that will calc the total for an order
     function calculateTotal() {
         let sum = 0.0;
-
+        console.log(ORDER);
         // iterate over the ORDER object
         for (let prop in ORDER) {
             if (ORDER.hasOwnProperty(prop) && Array.isArray(ORDER[prop])) {
@@ -149,11 +163,11 @@ $(document).ready(() => {
                 // and add the current objects ammount * price to the sum
                 let cur = ORDER[prop];
                 cur.map((iteration) => {
-                    sum += iteration.amount * iteration.price;
+                    sum += (iteration.amount || 1) * iteration.retailCost;
                 });
             }
         }
-        return sum;
+        $('#orderTotal').html(sum);
     }
 
     $(document).on('click', '.container-button', (e) => {
@@ -188,7 +202,6 @@ $(document).ready(() => {
 
         ORDER.servings[servingIndex].scoops = scoopArray;
         ORDER.servings[servingIndex].scoopIndexes = scoopIndex;
-        
     });
 
     $(document).on('change', '.topping-input', e => {
@@ -209,11 +222,10 @@ $(document).ready(() => {
         });
         ORDER.servings[servingIndex].toppings = toppingArray;
         ORDER.servings[servingIndex].toppingIndexes = toppingIndex;
-        
     });
 
     // Make a POST to the API
-    $('.order').click((e) => {
+    $(document).on('click', '.order', e => {
         e.preventDefault();
         ORDER.status = "unfilled";
         console.log(ORDER);

@@ -63,15 +63,12 @@ void createServer(const v8::FunctionCallbackInfo<v8::Value> &args)
 }
 
 //  accepts an object container id and status, changes the status of the order at the id to the new status..
-void changeOrderStatus(const v8::FunctionCallbackInfo<v8::Value> &args)
+void fillOrder(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
     Isolate *isolate = args.GetIsolate();
-    Handle<Object> object = Handle<Object>::Cast(args[0]);
+    int orderNumber = Handle<Value>::Cast(args[0])->NumberValue();
 
-    int orderNumber = object->Get(String::NewFromUtf8(isolate, "id"))->NumberValue();
-    v8::String::Utf8Value status(object->Get(String::NewFromUtf8(isolate, "status")));
-
-    STATE.getOrders()[orderNumber].setStatus(std::string(*status));
+    STATE.getOrders()[orderNumber].setStatus("filled");
 }
 
 void createCustomer(const v8::FunctionCallbackInfo<v8::Value> &args)
@@ -259,7 +256,7 @@ void init(Handle<Object> exports, Handle<Object> module)
     NODE_SET_METHOD(exports, "createScoop", createScoop);
     NODE_SET_METHOD(exports, "createTopping", createTopping);
     NODE_SET_METHOD(exports, "createOrder", createOrder);
-    NODE_SET_METHOD(exports, "changeOrderStatus", changeOrderStatus);
+    NODE_SET_METHOD(exports, "fillOrder", fillOrder);
     NODE_SET_METHOD(exports, "createServer", createServer);
     NODE_SET_METHOD(exports, "createCustomer", createCustomer);
 

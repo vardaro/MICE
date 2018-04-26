@@ -44,7 +44,7 @@ $(document).ready(() => {
                                 });
                                 return  out;
                             })()}
-                            <a href="#" class="btn btn-primary">Fill</a>
+                            <a id="fillOrder" name="${i}" class="btn btn-primary">Fill</a>
                             <a href="#" class="btn btn-danger">Cancel</a>
                             
                             </div>
@@ -121,6 +121,24 @@ $(document).ready(() => {
             type: "POST",
             url: '/api/create_customer',
             data: customer,
+            success: (data) => {
+                console.log(data);
+                STATE = data;
+
+                // store new state in local storage for cross page access
+                localStorage.setItem("STATE", JSON.stringify(data));
+                location.reload();
+            },
+        });
+    });
+
+    $(document).on('click', '#fillOrder', e=> {
+        console.log(e);
+        let indexToFill = parseInt(e.target.name);
+        console.log(indexToFill);
+        $.ajax({
+            type: "POST",
+            url: `/api/fill_order/${indexToFill}`,
             success: (data) => {
                 console.log(data);
                 STATE = data;
