@@ -190,7 +190,7 @@ serving unpackServing(Isolate * isolate, const Handle<Object> servingObj){
 order unpackOrder(Isolate * isolate, Handle<Object> orderObject) {
     // extract the status of the obj
     v8::String::Utf8Value status(orderObject->Get(String::NewFromUtf8(isolate, "status")));
-
+    Handle<Number> orderNumber = Handle<Number>::Cast(orderObject->Get(String::NewFromUtf8(isolate, "orderNumber")));
 
     // get teh samples
     std::vector<serving> servingVector;
@@ -207,6 +207,7 @@ order unpackOrder(Isolate * isolate, Handle<Object> orderObject) {
 
     // make the final object
     order s(std::string(*status), servingVector);
+    s.setOrderNumber(orderNumber->NumberValue());
     return s;
 }
 
