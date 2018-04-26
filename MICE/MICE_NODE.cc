@@ -25,7 +25,6 @@ using namespace std::placeholders;
 // to the database, and a new copy of the STATE is sent to the client to be stored as a cookie...
 
 emporium STATE;
-
 // accepts the json of a container, creates a new container and apends to state
 void createContainer(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
@@ -182,7 +181,6 @@ Local<Array> getStateCustomers(Isolate * isolate) {
     }
 
     return orders;
-
 }
 
 // returns the current state of the emporium
@@ -203,7 +201,7 @@ void getState(const v8::FunctionCallbackInfo<v8::Value> &args)
     newState->Set(String::NewFromUtf8(isolate, "orders"), getStateOrders(isolate));
     newState->Set(String::NewFromUtf8(isolate, "servers"), getStateServers(isolate));
     newState->Set(String::NewFromUtf8(isolate, "customers"), getStateCustomers(isolate));
-    
+    newState->Set(String::NewFromUtf8(isolate, "cash_register"), Number::New(isolate, STATE.getCashRegister().getBalance()));
     
     args.GetReturnValue().Set(newState);
 }
@@ -257,12 +255,15 @@ void loadState(const v8::FunctionCallbackInfo<v8::Value> &args)
         customer o = unpackCustomer(isolate, cur);
         STATE.getCustomers().emplace_back(o);
     }
-
+    Local<Number> cashRegister = Local<Number>::Cast(state->Get(String::NewFromUtf8(isolate, "cash_register")));
+    STATE.getCashRegister().applyBalance(cashRegister->NumberValue());
     //finally done with that.... 
 }
 
 void init(Handle<Object> exports, Handle<Object> module)
 {
+    STATE.initCashRegister(0.0);
+
     NODE_SET_METHOD(exports, "createContainer", createContainer);
     NODE_SET_METHOD(exports, "createScoop", createScoop);
     NODE_SET_METHOD(exports, "createTopping", createTopping);

@@ -24,7 +24,7 @@ int item::getStockRemaining() {
     return item::stockRemaining;
 }
 void item::reassignStock(int i) {
-    item::stockRemaining + i;
+    item::stockRemaining = item::stockRemaining + i;
 }
 std::string item::getImg(){
     return item::img;

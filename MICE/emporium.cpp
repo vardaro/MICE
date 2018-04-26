@@ -28,6 +28,10 @@ std::vector<customer>& emporium::getCustomers() {
     return emporium::customers;
 }
 
+cash_register& emporium::getCashRegister() {
+    return emporium::cashRegister;
+}
+
 // this function accepts an order object as param, and emplaces the order object to the 
 // order vector member
 // however before doing this, it reduces the stock of each involved object by 1
@@ -55,6 +59,13 @@ void emporium::makeOrder(order newOrder) {
         }
     }
 
+    // now add the total cost toteh cash register...
+    emporium::cashRegister.applyBalance(newOrder.getTotalCost());
+
     // yayy now set those private members! (no im not going to worry about the stock in the object vectors bc that sounds annoying and will be annoying to implement AND has no impact)
     emporium::orders.emplace_back(newOrder);
+}
+
+void emporium::initCashRegister(double amt) {
+    emporium::cashRegister = cash_register(amt);
 }

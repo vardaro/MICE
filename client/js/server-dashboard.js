@@ -2,7 +2,9 @@
 $(document).ready(() => {
     let STATE = JSON.parse(localStorage.getItem("STATE"));
     console.log(STATE);
-    
+    $('#curAmount').html(() =>{
+        return STATE.cash_register;
+    });
     $('#order-dashboard').html(() => {
         let length = STATE.orders.length;
 
