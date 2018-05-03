@@ -117,90 +117,6 @@ Local<Array> vectorToArray(Isolate *isolate, std::function<void(Isolate *, Local
     return newArray;
 }
 
-// returns a v8 array of the states containers
-Local<Array> getStateContainers(Isolate *isolate)
-{
-    // pack container vector
-    Local<Array> containerVec = Array::New(isolate);
-    for (unsigned int i = 0; i < STATE.getContainers().size(); i++)
-    {
-        Local<Object> result = Object::New(isolate);
-        packContainer(isolate, result, STATE.getContainers()[i]);
-        containerVec->Set(i, result);
-    }
-    return containerVec;
-}
-
-// returns a v8 array of the states scoops
-Local<Array> getStateScoops(Isolate *isolate)
-{
-    // pack scoop vector
-    Local<Array> scoopVec = Array::New(isolate);
-    for (unsigned int i = 0; i < STATE.getScoops().size(); i++)
-    {
-        Local<Object> result = Object::New(isolate);
-        packScoop(isolate, result, STATE.getScoops()[i]);
-        scoopVec->Set(i, result);
-    }
-    return scoopVec;
-}
-
-Local<Array> getStateToppings(Isolate *isolate)
-{
-    Local<Array> toppings = Array::New(isolate);
-    for (unsigned int i = 0; i < STATE.getToppings().size(); i++)
-    {
-        Local<Object> result = Object::New(isolate);
-        packTopping(isolate, result, STATE.getToppings()[i]);
-        toppings->Set(i, result);
-    }
-    return toppings;
-}
-
-// // TODO;
-Local<Array> getStateOrders(Isolate *isolate)
-{
-    Local<Array> orders = Array::New(isolate);
-
-    for (unsigned int i = 0; i < STATE.getOrders().size(); i++)
-    {
-        Local<Object> result = Object::New(isolate);
-        packOrder(isolate, result, STATE.getOrders()[i]);
-        orders->Set(i, result);
-    }
-
-    return orders;
-}
-
-// // TODO;
-Local<Array> getStateServers(Isolate *isolate)
-{
-    Local<Array> orders = Array::New(isolate);
-
-    for (unsigned int i = 0; i < STATE.getServers().size(); i++)
-    {
-        Local<Object> result = Object::New(isolate);
-        packServer(isolate, result, STATE.getServers()[i]);
-        orders->Set(i, result);
-    }
-
-    return orders;
-}
-// // TODO;
-Local<Array> getStateCustomers(Isolate *isolate)
-{
-    Local<Array> orders = Array::New(isolate);
-
-    for (unsigned int i = 0; i < STATE.getCustomers().size(); i++)
-    {
-        Local<Object> result = Object::New(isolate);
-        packCustomer(isolate, result, STATE.getCustomers()[i]);
-        orders->Set(i, result);
-    }
-
-    return orders;
-}
-
 // restock a container at a specified index by a specified amounts
 void restockContainer(const v8::FunctionCallbackInfo<v8::Value> &args)
 {
@@ -241,18 +157,13 @@ void getState(const v8::FunctionCallbackInfo<v8::Value> &args)
     Isolate *isolate = args.GetIsolate();
     Local<Object> newState = Object::New(isolate);
 
-    // newState->Set(String::NewFromUtf8(isolate, "containers"), vectorToArray<container>(isolate, std::bind(&packContainer, _1, _2, _3), std::bind(&emporium::getContainers, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "scoops"), vectorToArray<scoop>(isolate, std::bind(&packScoop, _1, _2, _3), std::bind(&emporium::getScoops, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "toppings"), vectorToArray<topping>(isolate, std::bind(&packTopping, _1, _2, _3), std::bind(&emporium::getToppings, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "orders"), vectorToArray<order>(isolate, std::bind(&packOrder, _1, _2, _3), std::bind(&emporium::getOrders, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "servers"), vectorToArray<server>(isolate, std::bind(&packServer, _1, _2, _3), std::bind(&emporium::getServers, &STATE)));
-    // newState->Set(String::NewFromUtf8(isolate, "customers"), vectorToArray<customer>(isolate, std::bind(&packCustomer, _1, _2, _3), std::bind(&emporium::getCustomers, &STATE)));
-    newState->Set(String::NewFromUtf8(isolate, "containers"), getStateContainers(isolate));
-    newState->Set(String::NewFromUtf8(isolate, "scoops"), getStateScoops(isolate));
-    newState->Set(String::NewFromUtf8(isolate, "toppings"), getStateToppings(isolate));
-    newState->Set(String::NewFromUtf8(isolate, "orders"), getStateOrders(isolate));
-    newState->Set(String::NewFromUtf8(isolate, "servers"), getStateServers(isolate));
-    newState->Set(String::NewFromUtf8(isolate, "customers"), getStateCustomers(isolate));
+    newState->Set(String::NewFromUtf8(isolate, "containers"), vectorToArray<container>(isolate, std::bind(&packContainer, _1, _2, _3), std::bind(&emporium::getContainers, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "scoops"), vectorToArray<scoop>(isolate, std::bind(&packScoop, _1, _2, _3), std::bind(&emporium::getScoops, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "toppings"), vectorToArray<topping>(isolate, std::bind(&packTopping, _1, _2, _3), std::bind(&emporium::getToppings, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "orders"), vectorToArray<order>(isolate, std::bind(&packOrder, _1, _2, _3), std::bind(&emporium::getOrders, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "servers"), vectorToArray<server>(isolate, std::bind(&packServer, _1, _2, _3), std::bind(&emporium::getServers, &STATE)));
+    newState->Set(String::NewFromUtf8(isolate, "customers"), vectorToArray<customer>(isolate, std::bind(&packCustomer, _1, _2, _3), std::bind(&emporium::getCustomers, &STATE)));
+
     newState->Set(String::NewFromUtf8(isolate, "cash_register"), Number::New(isolate, STATE.getCashRegister().getBalance()));
 
     args.GetReturnValue().Set(newState);
