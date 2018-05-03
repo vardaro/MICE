@@ -11,7 +11,7 @@ $(document).ready(() => {
 
         for (let i = 0; i < STATE.containers.length; i++) {
             let cur = STATE.containers[i];
-
+            if (cur.stockRemaining < 1) continue; // filter out products out of stock!
             let curInnerHTML = `
 
             <div class="row" style="margin-bottom: 2rem;">
@@ -45,7 +45,8 @@ $(document).ready(() => {
 
         for (let i = 0; i < STATE.toppings.length; i++) {
             let cur = STATE.toppings[i];
-
+            if (cur.stockRemaining < 1) continue; // filter out products out of stock!
+            
             let curInnerHTML = `
             <div class="row" style="margin-bottom: 2rem;">
                 <div class="col-md-12">
@@ -74,7 +75,8 @@ $(document).ready(() => {
 
         for (let i = 0; i < STATE.scoops.length; i++) {
             let cur = STATE.scoops[i];
-
+            if (cur.stockRemaining < 1) continue; // filter out products out of stock!
+            
             let curInnerHTML = `
             <div class="row" style="margin-bottom: 2rem;">
                 <div class="col-md-12">
@@ -89,6 +91,7 @@ $(document).ready(() => {
                         </div>
                     </div>
                 </div>
+
             </div>
             `;
 

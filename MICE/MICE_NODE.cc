@@ -1,7 +1,7 @@
 #include <node.h>
 #include <node_object_wrap.h>
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
+#include <stdlib.h> /* srand, rand */
+#include <time.h>   /* time */
 
 #include <v8.h>
 #include <iostream>
@@ -56,7 +56,7 @@ void createOrder(const v8::FunctionCallbackInfo<v8::Value> &args)
     order o = unpackOrder(isolate, args);
 
     // get a random number for order num
-    srand (time(NULL));
+    srand(time(NULL));
     int rando = rand() % 10000 + 1; // random number between 0 and 10000
 
     o.setOrderNumber(rando);
@@ -71,6 +71,15 @@ void createServer(const v8::FunctionCallbackInfo<v8::Value> &args)
     Isolate *isolate = args.GetIsolate();
     server s = unpackServer(isolate, args);
     STATE.getServers().emplace_back(s);
+}
+
+void fireServer(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    Isolate * isolate = args.GetIsolate();
+
+
+    int indexOfServer = Local<Number>::Cast(args[0])->NumberValue();
+    // EARSE THE SERVER FROM THE VECTOR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    STATE.getServers().erase(STATE.getServers().begin() + indexOfServer);
 }
 
 //  accepts an object container id and status, changes the status of the order at the id to the new status..
@@ -108,12 +117,13 @@ Local<Array> vectorToArray(Isolate *isolate, std::function<void(Isolate *, Local
     return newArray;
 }
 
-
 // returns a v8 array of the states containers
-Local<Array> getStateContainers(Isolate * isolate) {
+Local<Array> getStateContainers(Isolate *isolate)
+{
     // pack container vector
     Local<Array> containerVec = Array::New(isolate);
-    for (unsigned int i = 0; i < STATE.getContainers().size(); i++) {
+    for (unsigned int i = 0; i < STATE.getContainers().size(); i++)
+    {
         Local<Object> result = Object::New(isolate);
         packContainer(isolate, result, STATE.getContainers()[i]);
         containerVec->Set(i, result);
@@ -122,10 +132,12 @@ Local<Array> getStateContainers(Isolate * isolate) {
 }
 
 // returns a v8 array of the states scoops
-Local<Array> getStateScoops(Isolate * isolate) {
+Local<Array> getStateScoops(Isolate *isolate)
+{
     // pack scoop vector
     Local<Array> scoopVec = Array::New(isolate);
-    for (unsigned int i = 0; i < STATE.getScoops().size(); i++) {
+    for (unsigned int i = 0; i < STATE.getScoops().size(); i++)
+    {
         Local<Object> result = Object::New(isolate);
         packScoop(isolate, result, STATE.getScoops()[i]);
         scoopVec->Set(i, result);
@@ -133,9 +145,11 @@ Local<Array> getStateScoops(Isolate * isolate) {
     return scoopVec;
 }
 
-Local<Array> getStateToppings(Isolate * isolate) {
+Local<Array> getStateToppings(Isolate *isolate)
+{
     Local<Array> toppings = Array::New(isolate);
-    for (unsigned int i = 0; i < STATE.getToppings().size(); i++) {
+    for (unsigned int i = 0; i < STATE.getToppings().size(); i++)
+    {
         Local<Object> result = Object::New(isolate);
         packTopping(isolate, result, STATE.getToppings()[i]);
         toppings->Set(i, result);
@@ -144,43 +158,81 @@ Local<Array> getStateToppings(Isolate * isolate) {
 }
 
 // // TODO;
-Local<Array> getStateOrders(Isolate * isolate) {
+Local<Array> getStateOrders(Isolate *isolate)
+{
     Local<Array> orders = Array::New(isolate);
 
-    for (unsigned int i = 0; i < STATE.getOrders().size(); i++) {
+    for (unsigned int i = 0; i < STATE.getOrders().size(); i++)
+    {
         Local<Object> result = Object::New(isolate);
         packOrder(isolate, result, STATE.getOrders()[i]);
         orders->Set(i, result);
     }
 
     return orders;
-
 }
 
 // // TODO;
-Local<Array> getStateServers(Isolate * isolate) {
+Local<Array> getStateServers(Isolate *isolate)
+{
     Local<Array> orders = Array::New(isolate);
 
-    for (unsigned int i = 0; i < STATE.getServers().size(); i++) {
+    for (unsigned int i = 0; i < STATE.getServers().size(); i++)
+    {
         Local<Object> result = Object::New(isolate);
         packServer(isolate, result, STATE.getServers()[i]);
         orders->Set(i, result);
     }
 
     return orders;
-
 }
 // // TODO;
-Local<Array> getStateCustomers(Isolate * isolate) {
+Local<Array> getStateCustomers(Isolate *isolate)
+{
     Local<Array> orders = Array::New(isolate);
 
-    for (unsigned int i = 0; i < STATE.getCustomers().size(); i++) {
+    for (unsigned int i = 0; i < STATE.getCustomers().size(); i++)
+    {
         Local<Object> result = Object::New(isolate);
         packCustomer(isolate, result, STATE.getCustomers()[i]);
         orders->Set(i, result);
     }
 
     return orders;
+}
+
+// restock a container at a specified index by a specified amounts
+void restockContainer(const v8::FunctionCallbackInfo<v8::Value> &args)
+{
+
+    // get the isolate, cast args to an object....
+    // extract the index of the container and amount, then reassign the stock of that container
+    Isolate *isolate = args.GetIsolate();
+    Local<Object> body = Local<Object>::Cast(args[0]);
+    int conIndex = Local<Number>::Cast(body->Get(String::NewFromUtf8(isolate, "index")))->NumberValue();
+    int amountToStock = Local<Number>::Cast(body->Get(String::NewFromUtf8(isolate, "amount")))->NumberValue();
+    STATE.getContainers()[conIndex].reassignStock(amountToStock);
+}
+
+void restockScoop(const v8::FunctionCallbackInfo<v8::Value> &args)
+{
+    Isolate *isolate = args.GetIsolate();
+
+    Local<Object> body = Local<Object>::Cast(args[0]);
+    int conIndex = Local<Number>::Cast(body->Get(String::NewFromUtf8(isolate, "index")))->NumberValue();
+    int amountToStock = Local<Number>::Cast(body->Get(String::NewFromUtf8(isolate, "amount")))->NumberValue();
+
+    STATE.getScoops()[conIndex].reassignStock(amountToStock);
+}
+
+void restockTopping(const v8::FunctionCallbackInfo<v8::Value> &args)
+{
+    Isolate *isolate = args.GetIsolate();
+    Local<Object> body = Local<Object>::Cast(args[0]);
+    int conIndex = Local<Number>::Cast(body->Get(String::NewFromUtf8(isolate, "index")))->NumberValue();
+    int amountToStock = Local<Number>::Cast(body->Get(String::NewFromUtf8(isolate, "amount")))->NumberValue();
+
+    STATE.getToppings()[conIndex].reassignStock(amountToStock);
 }
 
 // returns the current state of the emporium
@@ -202,7 +254,7 @@ void getState(const v8::FunctionCallbackInfo<v8::Value> &args)
     newState->Set(String::NewFromUtf8(isolate, "servers"), getStateServers(isolate));
     newState->Set(String::NewFromUtf8(isolate, "customers"), getStateCustomers(isolate));
     newState->Set(String::NewFromUtf8(isolate, "cash_register"), Number::New(isolate, STATE.getCashRegister().getBalance()));
-    
+
     args.GetReturnValue().Set(newState);
 }
 
@@ -257,7 +309,7 @@ void loadState(const v8::FunctionCallbackInfo<v8::Value> &args)
     }
     Local<Number> cashRegister = Local<Number>::Cast(state->Get(String::NewFromUtf8(isolate, "cash_register")));
     STATE.getCashRegister().applyBalance(cashRegister->NumberValue());
-    //finally done with that.... 
+    //finally done with that....
 }
 
 void init(Handle<Object> exports, Handle<Object> module)
@@ -271,6 +323,9 @@ void init(Handle<Object> exports, Handle<Object> module)
     NODE_SET_METHOD(exports, "fillOrder", fillOrder);
     NODE_SET_METHOD(exports, "createServer", createServer);
     NODE_SET_METHOD(exports, "createCustomer", createCustomer);
+    NODE_SET_METHOD(exports, "restockContainer", restockContainer);
+    NODE_SET_METHOD(exports, "restockScoop", restockScoop);
+    NODE_SET_METHOD(exports, "restockTopping", restockTopping);
 
     NODE_SET_METHOD(exports, "getState", getState);
     NODE_SET_METHOD(exports, "loadState", loadState);

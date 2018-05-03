@@ -5,7 +5,6 @@
 using namespace v8;
 
 // This file is for parsing and building json to be sent to and from node
-// dont try reading it tbh
 
 // POLYMORPHISM
 
@@ -131,6 +130,7 @@ topping unpackTopping(Isolate * isolate, const Handle<Object> toppingObj) {
 }
 
 // packs scoop cur into obj to be sent to node
+// obj is the object that gets data packed into, cur is a topping from which we get the original data
 void packTopping(Isolate * isolate, Local<Object> & obj, topping cur) {
     obj->Set(String::NewFromUtf8(isolate, "name"), String::NewFromUtf8(isolate, cur.getName().c_str()));
     obj->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate, cur.getDescription().c_str()));
@@ -156,7 +156,6 @@ serving unpackServing(Isolate * isolate, const Handle<Object> servingObj){
     // then push to the scoop vector
     int scoopCount = scoopArr->Length();
     for (int i = 0; i < scoopCount; i++) {
-        // you are right here anthony
         Handle<Object> scoopAsAnObject = Handle<Object>::Cast(scoopArr->Get(i));
         scoop s = unpackScoop(isolate, scoopAsAnObject);
         scoopVector.emplace_back(s);
@@ -181,8 +180,6 @@ serving unpackServing(Isolate * isolate, const Handle<Object> servingObj){
         toppingIndexVector.emplace_back((int)toppingIndexes->Get(i)->IntegerValue());
     }
 
-    
-    // FINNALY we can make the serving objct....
     serving s(servingContainer, containerIndex, scoopVector, scoopIndexVector, toppingVector, toppingIndexVector);
     return s;
 }

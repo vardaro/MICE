@@ -24,7 +24,7 @@ Emporium.findById('5adfc4dde2714b3c60620bc0', (err, data) => {
 // returns the state, but also adjusts the db
 const getState = (cb) => {
     let state = MICE.getState();
-    
+
     Emporium.findByIdAndUpdate(STATE_ID, state, (err, data) => {
         if (err) console.log(err);
         cb(state);
@@ -123,6 +123,31 @@ app.post('/api/create_customer', (req, res) => {
     getState(state => {
         res.send(state);
     });
+});
+
+app.post('/api/restock_item', (req, res) => {
+    let body = req.body;
+
+    console.log(body);
+    switch (body.type) {
+        case 'containers': {
+            MICE.restockContainer(body);
+        }
+        case 'scoops': {
+            MICE.restockScoop(body);
+        }
+        case 'toppings': {
+            MICE.restockTopping(body);
+        }
+    }
+    getState(state => {
+        res.send(state);
+    });
+});
+
+app.post('/api/fire_server', (req, res) => {
+    let body = req.body;
+    
 });
 
 app.get('/', (req, res) => {

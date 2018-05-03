@@ -32,39 +32,43 @@
 </head>
 
 <body>
-    <div class="container">
-        <section class="header">
-            <h1>Maverick Ice Cream Emporium</h1>
-            <div class="row" style="margin-top: 10rem;">
-                <div class="col">
-                    <a class="btn btn-primary" href="./pages/customer.html">CUSTOMER</a>
+    <header>
+        <div class="view jarallax" data-jarallax='{"speed": 0.2}' style="background-image: url('https://images.pexels.com/photos/169373/pexels-photo-169373.jpeg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+            <!-- Mask & flexbox options-->
+            <div class="mask rgba-white-light d-flex justify-content-center align-items-center">
+                <!-- Content -->
+                <div class="container">
+                    <!--Grid row-->
+                    <div class="row">
+                        <!--Grid column-->
+                        <div class="col-md-12 white-text text-center">
+                            <h1 class="display-3 mb-0 pt-md-5 pt-5 font-weight-bold wow fadeInDown" data-wow-delay="0.3s">Maverick Ice Cream Emporium
+                            </h1>
+                            <h5 class="text-uppercase pt-md-5 pt-sm-2 pt-5 pb-md-5 pb-sm-3 pb-5 white-text font-weight-bold wow fadeInDown" data-wow-delay="0.3s"></h5>
+                            <div class="wow fadeInDown" data-wow-delay="0.3s">
+                                <a class="btn btn-light-blue btn-lg"  href="./pages/server.html">Server</a>
+                                <a class="btn btn-indigo btn-lg"  href="./pages/manager.html">Manager</a>
+                                <a class="btn btn-grey btn-lg" href="./pages/customer.html">Customer</a>
+                                
+                            </div>
+                        </div>
+                        <!--Grid column-->
+                    </div>
+                    <!--Grid row-->
                 </div>
-                <div class="col">
-                    <a class="btn btn-primary" href="./pages/server.html">SERVER</a>
-                </div>
-                <div class="col">
-                    <a class="btn btn-primary" href="./pages/manager.html">MANAGER</a>
-                </div>
+                <!-- Content -->
             </div>
-        </section>
-        <!-- jquery -->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
-        <script type="text/javascript">
-
-            // on the landing page, get the state from the server
-
-            $.ajax({
-                type: "GET",
-                url: '/api/get_state',
-                success: (data) => {
-                    console.log(data);
-                    localStorage.setItem("STATE", JSON.stringify(data));
-                }
-            });
-
-        </script>
-    </div>
+            <!-- Mask & flexbox options-->
+        </div>
+    </header>
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/js/mdb.min.js"></script>
 </body>
 
 </html>
