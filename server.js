@@ -132,22 +132,20 @@ app.post('/api/restock_item', (req, res) => {
     switch (body.type) {
         case 'containers': {
             MICE.restockContainer(body);
+            break;
         }
         case 'scoops': {
             MICE.restockScoop(body);
+            break;
         }
         case 'toppings': {
             MICE.restockTopping(body);
+            break;
         }
     }
     getState(state => {
         res.send(state);
     });
-});
-
-app.post('/api/fire_server', (req, res) => {
-    let body = req.body;
-    
 });
 
 app.get('/', (req, res) => {
